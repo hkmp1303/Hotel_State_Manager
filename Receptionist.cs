@@ -1,6 +1,6 @@
 namespace App;
 
-class Receptionsist
+class Receptionist
 {
     public string Username;
     private string _password;
@@ -10,14 +10,14 @@ class Receptionsist
     }
 
     // constructor
-    Receptionsist(string username, string password)
+    Receptionist(string username, string password)
     {
         Username = username;
         _password = password;
     }
 
     // dictionary of receptionsits/users
-    public static Dictionary<string, Receptionsist> ReceptionistList = new();
+    public static Dictionary<string, Receptionist> ReceptionistList = new();
 
     //load method
     static public void LoadFromFile(string filename)
@@ -28,7 +28,7 @@ class Receptionsist
             string[] parts = line.Split('¤');
             if (parts.Length < 2) continue; // skip invalid lines
             // Add receptionist to dictionary from file
-            ReceptionistList.Add(parts[0], new Receptionsist(parts[0], parts[1]));
+            ReceptionistList.Add(parts[0], new Receptionist(parts[0], parts[1]));
         }
     }
 }
