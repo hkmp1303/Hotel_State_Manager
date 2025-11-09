@@ -22,7 +22,7 @@ class Room
         string[] lines = File.ReadAllLines(filename);
         foreach (string line in lines)              // loop through array lines
         {
-            string[] parts = line.Split('¤');       // separate data for saving
+            string[] parts = line.Split('¤');       // separate data for loading
             if (parts.Length < 2) continue;         // Skip invalid lines
             int roomnumber = int.Parse(parts[0]);   // initialize variable, cast data from string to int for loading
             // add roomnumber to dictionary
@@ -44,7 +44,8 @@ class Room
 }
 enum RoomStatus
 {
-    unavailible,
-    reserved,
-    vacant
+    Unavailible,
+    Reserved,
+    Occupied,
+    Vacant
 }

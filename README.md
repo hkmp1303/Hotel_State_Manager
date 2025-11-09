@@ -25,7 +25,7 @@ Follow on screen console prompts throughout the system. Menus display key charac
 ## Design Structure
 
 ### Data
-The project uses CSV files for persistent data storage as changes occur.
+The project uses CSV files for persistent data storage. Changes are saved as they occur. Each classes' data is saved by that class. This saving structure allows each class to exist independently of each other, as a seperate componet, which are joined together in the Booking Class.
 
 ### Project structure
 
@@ -36,6 +36,23 @@ In the future the Guest Class would be beneficial in facilitating guests' abilit
 **Receptionist Class**
 
 Since the current project is an extention of a larger framework, this class will tie into the existing design structure. The program is designed from the receptionist's perspective as the end user. The login information for these users is stored in this Class.
+
+**Room Class**
+
+The Room Class stores information about a room's status. Potential statuses include: Reserved, Occupied, Vacant or Unavailable. Reserved rooms are associated with a booking in which the guest has not checked in. Occupied rooms have a checked in guest. Vacant rooms are available, unoccupied and unreserved. Unavailible rooms have been removed from rotation for scheduling by the receptionist for maintenance or another reason.
+
+At program start the following rooms have the following status:
+- 101 Vacant
+- 201 Reserved
+- 202 Occupied
+- 213 Unavailible
+
+**Booking Class**
+
+The information required to fullfil a customers booking request is stored in the Booking Class. This information includes guest name, room number, booking status, the receptionist responsible for the booking as well as start and end times for the reservation. Room status is retrieved from the Room Class.
+
+
+**Class UML**
 
 ![Project UML](docs/Hotel_State_UML65.png)
 
