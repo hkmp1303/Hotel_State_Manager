@@ -48,6 +48,7 @@ class Room
     public static void ListRooms(RoomStatus? filter = null)
     {
         Console.Clear();
+        System.Console.WriteLine("Room List\n");
         foreach (var room in RoomList)
         {
             if (filter == null || filter == room.Value.Status)
@@ -75,19 +76,22 @@ class Room
         }
     }
 
-    public static RoomStatus PickStatus()
+    // shows and operates status picker, null means user canceled selection
+    public static RoomStatus? PickStatus()
     {
         while (true)
         {
             Console.Clear();
-            System.Console.WriteLine("Select the room status you wish to enter");
+            System.Console.WriteLine("Select the room status you wish to enter \n\n[cancel] abort status change\n");
             List<RoomStatus> types = new(Enum.GetValues<RoomStatus>());
             int i = 0;
             for (i = 0; i < types.Count(); i++)
             {
                 System.Console.WriteLine($"[{i + 1}] {types[i]}");
             }
-            if (int.TryParse(Console.ReadLine() ?? "", out i) && i > 0 && types.Count() >= i) // check if selected room status exists
+            string selection = Console.ReadLine() ?? "";
+            if (selection == "cancel") return null;
+            if (int.TryParse(selection, out i) && i > 0 && types.Count() >= i) // check if selected room status exists
                 return types[i - 1];
         }
     }

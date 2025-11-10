@@ -47,18 +47,21 @@ class Guest
         return (FirstName + ' ' + LastName).Trim();
     }
 
-    public static Guest PickGuest()
+    public static Guest? PickGuest()
     {
         while (true)
         {
             Console.Clear();
-            System.Console.WriteLine("Select a guest from the list or select [0] to create a new guest");
+            System.Console.WriteLine("Select a guest from the list or select [0] to create a new guest\n\n[cancel] discontinue selection");
+            System.Console.ReadLine();
             int i = 1;
             foreach (var guest in Guests)
             {
                 System.Console.WriteLine($"[{i++}] {guest}");
             }
-            if (!int.TryParse(Console.ReadLine() ?? "", out i)) continue;
+            string selection = Console.ReadLine() ?? "";
+            if (selection == "cancel") return null;
+            if (!int.TryParse(selection, out i)) continue;
             Guest g;
             if (i > 0 && Guests.Count() >= i)
             {

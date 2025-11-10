@@ -22,6 +22,8 @@ The program is intended as a complement to an existing system. Feature functions
 ## Quick guide
 Follow on screen console prompts throughout the system. Menus display key characters for user selection to navigate the program.
 
+At program start you can login as "Eve" using the password: pass3
+
 ## Design Structure
 
 ### Data
@@ -31,7 +33,7 @@ The project uses CSV files for persistent data storage. Changes are saved as the
 
 **Guest Class**
 
-In the future the Guest Class would be beneficial in facilitating guests' ability to login and view thier booking requests althought this is not a current system requirement.
+In the future the Guest Class would be beneficial in facilitating guests' ability to login and view thier booking requests althought this is not a current system requirement. Currently, this class holds just the Guests first and last name.
 
 **Receptionist Class**
 

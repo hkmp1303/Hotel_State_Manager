@@ -41,7 +41,8 @@ while (running)
             "[3] Change room status\n" +
             "[4] Check out or in a guest\n" +
             "[5] Create booking\n" +
-            "[6] Exit program"
+            "[6] List bookings\n" +
+            "[9] Exit program"
         );
 
         int choice = 0;
@@ -60,21 +61,25 @@ while (running)
                 break;
             case 3: // change room status
                 Room room = Room.PickRoom();
-                room.Status = Room.PickStatus();
+                RoomStatus? newStatus = Room.PickStatus();
+                room.Status = newStatus ?? room.Status; // revert to previous room status if it is not set
                 Room.SaveToFile(roomSaveFile);
                 break;
             case 4: // check in/out guest
                 Booking.PickBookingForCheckin();
                 break;
             case 5: // create booking
-                Guest guest = Guest.PickGuest();
+                Guest? guest = Guest.PickGuest();
+                if (guest == null) break;
                 Room bookRoom = Room.PickRoom(RoomStatus.Vacant);
                 Booking.Create(guest, bookRoom, receptionist);
                 Booking.SaveToFile(bookingSaveFile);
                 break;
-            case 6: // exit
-                running = false;
+            case 6: // list bookings
+                Booking.ListBookings();
                 break;
+            case 9: // exit
+                return;
             default:
                 continue;
         }

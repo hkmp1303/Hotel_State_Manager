@@ -41,7 +41,7 @@ class Booking
         string[] lines = File.ReadAllLines(filename);
         foreach (string line in lines)
         {
-            string[] parts = line.Split('|'); // separate data for loading
+            string[] parts = line.Split('¤'); // separate data for loading
             if (parts.Length < 5) continue; // discard invalid data
             // add booking to dictionary
             long start = long.Parse(parts[0]), end = long.Parse(parts[1]);
@@ -69,7 +69,7 @@ class Booking
     {
         long start = ((DateTimeOffset)Start).ToUnixTimeSeconds();
         long end = ((DateTimeOffset)End).ToUnixTimeSeconds();
-        return $"{start}¤{end}¤{Guest}¤{Room}¤{Receptionist}";
+        return $"{start}¤{end}¤{Guest}¤{Room}¤{Receptionist}¤{Status}";
     }
 
     public static Booking Create(Guest guest, Room room, Receptionist receptionist)
@@ -97,8 +97,11 @@ class Booking
             List<long> listedStarts = new();
             foreach (var booking in BookingsByStart)
             {
-                if (booking.Value.Start < DateTime.UtcNow) // have booking started ?
+                if (booking.Value.Start < DateTime.UtcNow && booking.Value.Status == BookingStatus.Booked) // has the booking started?
+                {
                     System.Console.WriteLine($"[{++i}] {booking.Value.Start} Room {booking.Value.Room} - {booking.Value.Guest}");
+                    listedStarts.Add(booking.Key);
+                }
             }
             if (listedStarts.Count == 0)
             {
@@ -110,12 +113,28 @@ class Booking
             string selection = Console.ReadLine() ?? "";
             if (selection.Trim() == "") continue;
             if (selection == "cancel") break;
-            if (int.TryParse(selection, out i) && BookingsByStart.TryGetValue(listedStarts[i-1], out b))
-            {
-                b.Status = BookingStatus.CheckedIn;
-                Booking.SaveToFile("files/bookings.csv");
-            }
+            if (!int.TryParse(selection, out i)) continue;
+
+            if (!BookingsByStart.TryGetValue(listedStarts[i - 1], out b)) continue;
+            b.Status = BookingStatus.CheckedIn;
+            Booking.SaveToFile("files/bookings.csv");
+            System.Console.WriteLine("The guest has been checked in and the booking status updated.\nPress enter to continue");
+            System.Console.ReadLine();
+            break;
         }
+    }
+
+    // list bookings
+    public static void ListBookings()
+    {
+        Console.Clear();
+        System.Console.WriteLine("Booking List\n"+BookingsByStart.Count());
+        foreach (var booking in BookingsByStart)
+        {
+            System.Console.WriteLine($"Room {booking.Value.Room} ({booking.Value.Start} - {booking.Value.End})");
+        }
+        System.Console.WriteLine("Press enter to continue");
+        Console.ReadLine();
     }
 
 }
