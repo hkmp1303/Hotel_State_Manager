@@ -3,12 +3,13 @@ using App;
 
 // Load data from files
 string roomSaveFile = "files/rooms.csv",
-    guestSaveFile = "files/guests.csv",
+    guestSaveFile = "files/guest.csv",
     bookingSaveFile = "files/bookings.csv",
     receptionstsSaveFile = "files/receptionists.csv";
 Room.LoadFromFile(roomSaveFile);
 Guest.LoadFromFile(guestSaveFile);
-Booking.LoadFromFile(bookingSaveFile);
+if (File.Exists(bookingSaveFile))
+    Booking.LoadFromFile(bookingSaveFile);
 Receptionist.LoadFromFile(receptionstsSaveFile);
 
 bool running = true;
@@ -17,7 +18,7 @@ while (running)
 {
     Console.Clear();
     System.Console.WriteLine("Welcome to the Hotel California");
-    System.Console.Write("Please login\nUsername:");
+    System.Console.Write("Please login\nUsername: ");
     Receptionist? receptionist;
     if (!Receptionist.ReceptionistList.TryGetValue(Console.ReadLine() ?? "", out receptionist))
     {
@@ -25,6 +26,7 @@ while (running)
         System.Console.ReadLine();
         continue;
     }
+    System.Console.Write("Password: ");
     if (!receptionist.TryLogin(receptionist.Username, Console.ReadLine() ?? ""))
     {
         System.Console.WriteLine("The username and password do not match. Press enter to reenter your login information.");
@@ -39,7 +41,8 @@ while (running)
             "[2] Vacant rooms list\n" +
             "[3] Change room status\n" +
             "[4] Check out or in a guest\n" +
-            "[5] Create booking"
+            "[5] Create booking\n" +
+            "[6] Exit program"
         );
 
         int choice = 0;
@@ -64,6 +67,9 @@ while (running)
             case 4: // check in/out guest
                 break;
             case 5: // create booking
+                break;
+            case 6: // exit
+                running = false;
                 break;
             default:
                 continue;

@@ -51,7 +51,7 @@ class Room
         foreach (var room in RoomList)
         {
             if (filter == null || filter == room.Value.Status)
-                System.Console.WriteLine(room.Key);
+                System.Console.WriteLine($"[{room.Key}] ({room.Value.Status})"); // print room status
         }
     }
 
@@ -77,7 +77,19 @@ class Room
 
     public static RoomStatus PickStatus()
     {
-        return RoomStatus.Occupied;
+        while (true)
+        {
+            Console.Clear();
+            System.Console.WriteLine("Select the room status you wish to enter");
+            List<RoomStatus> types = new(Enum.GetValues<RoomStatus>());
+            int i = 0;
+            for (i = 0; i < types.Count(); i++)
+            {
+                System.Console.WriteLine($"[{i+1}] {types[i]}");
+            }
+            if (int.TryParse(Console.ReadLine() ?? "", out i) && i > 0 && types.Count() >= i) // check if selected room status exists
+                return types[i-1];
+        }
     }
 }
 enum RoomStatus
