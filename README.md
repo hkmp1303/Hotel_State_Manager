@@ -57,3 +57,10 @@ The information required to fullfil a customers booking request is stored in the
 ![Project UML](docs/Hotel_State_UML65.png)
 
 Fullview of the UML class diagram can be accessed [here](https://www.yworks.com/yed-live/?file=https://gist.githubusercontent.com/hkmp1303/7178e6128c76b07bfff16a984a47908d/raw/62283e5daa590a48e0cdeb0ad9f22c6967065088/Hotel%20System) from yworks.
+
+## Known Issues
+
+- Bookings
+  - Bookings timestamps do not consider different timezones. As a result entires could be erronously entered in the wrong timezone. Converting user inputs to a standard UTC time, would resolve this issue.
+- Room
+  - The room selcting method does not consider availiblity based on time which could result in double bookings for any given room.

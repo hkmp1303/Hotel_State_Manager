@@ -8,8 +8,7 @@ string roomSaveFile = "files/rooms.csv",
     receptionstsSaveFile = "files/receptionists.csv";
 Room.LoadFromFile(roomSaveFile);
 Guest.LoadFromFile(guestSaveFile);
-if (File.Exists(bookingSaveFile))
-    Booking.LoadFromFile(bookingSaveFile);
+Booking.LoadFromFile(bookingSaveFile);
 Receptionist.LoadFromFile(receptionstsSaveFile);
 
 bool running = true;
@@ -65,8 +64,13 @@ while (running)
                 Room.SaveToFile(roomSaveFile);
                 break;
             case 4: // check in/out guest
+                Booking.PickBookingForCheckin();
                 break;
             case 5: // create booking
+                Guest guest = Guest.PickGuest();
+                Room bookRoom = Room.PickRoom(RoomStatus.Vacant);
+                Booking.Create(guest, bookRoom, receptionist);
+                Booking.SaveToFile(bookingSaveFile);
                 break;
             case 6: // exit
                 running = false;

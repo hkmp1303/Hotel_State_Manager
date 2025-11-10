@@ -56,11 +56,11 @@ class Room
     }
 
     // Pick room from list
-    public static Room PickRoom()
+    public static Room PickRoom(RoomStatus? filter = null)
     {
         while (true)
         {
-            ListRooms(null);
+            ListRooms(filter);
             Room? room;
             int roomNumber = 0;
             System.Console.WriteLine("Pick a room number from the list");
@@ -85,10 +85,10 @@ class Room
             int i = 0;
             for (i = 0; i < types.Count(); i++)
             {
-                System.Console.WriteLine($"[{i+1}] {types[i]}");
+                System.Console.WriteLine($"[{i + 1}] {types[i]}");
             }
             if (int.TryParse(Console.ReadLine() ?? "", out i) && i > 0 && types.Count() >= i) // check if selected room status exists
-                return types[i-1];
+                return types[i - 1];
         }
     }
 }
