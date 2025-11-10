@@ -5,7 +5,7 @@ class Booking
     public DateTime Start;
     public DateTime End;
     public string Guest;
-    public int Room;
+    public int RoomNumber;
     public string Receptionist;
     public BookingStatus Status;
 
@@ -19,7 +19,7 @@ class Booking
         Start = DateTimeOffset.FromUnixTimeSeconds(start).UtcDateTime; // convert long to DateTime
         End = DateTimeOffset.FromUnixTimeSeconds(end).UtcDateTime; // convert long to DateTime
         Guest = guest;
-        Room = room;
+        RoomNumber = room;
         Receptionist = receptionist;
         Status = Enum.Parse<BookingStatus>(bookingStatus); // trusted b/c read from savefile
     }
@@ -29,7 +29,7 @@ class Booking
         Start = start; // convert long to DateTime
         End = end; // convert long to DateTime
         Guest = guest;
-        Room = room;
+        RoomNumber = room;
         Receptionist = receptionist;
         Status = BookingStatus.Booked;
     }
@@ -69,7 +69,7 @@ class Booking
     {
         long start = ((DateTimeOffset)Start).ToUnixTimeSeconds();
         long end = ((DateTimeOffset)End).ToUnixTimeSeconds();
-        return $"{start}¤{end}¤{Guest}¤{Room}¤{Receptionist}¤{Status}";
+        return $"{start}¤{end}¤{Guest}¤{RoomNumber}¤{Receptionist}¤{Status}";
     }
 
     public static Booking? Create(Guest guest, Room room, Receptionist receptionist)
@@ -110,7 +110,7 @@ class Booking
             {
                 if (booking.Value.Start < DateTime.UtcNow && booking.Value.Status == BookingStatus.Booked) // check booking start DATETIME
                 {
-                    System.Console.WriteLine($"[{++i}] {booking.Value.Start} Room {booking.Value.Room} - {booking.Value.Guest}");
+                    System.Console.WriteLine($"[{++i}] {booking.Value.Start} Room {booking.Value.RoomNumber} - {booking.Value.Guest}");
                     listedStarts.Add(booking.Key);
                 }
             }
@@ -128,9 +128,12 @@ class Booking
             if (!BookingsByStart.TryGetValue(listedStarts[i - 1], out b)) continue;
             b.Status = BookingStatus.CheckedIn;
             Booking.SaveToFile("files/bookings.csv");
+            // update room status enum to occupied
+            Room.RoomList[b.RoomNumber].Status = RoomStatus.Occupied;
+            Room.SaveToFile("files/rooms.csv");
             System.Console.WriteLine("The guest has been checked in and the booking status updated.\nPress enter to continue");
             System.Console.ReadLine();
-            break;
+            return;
         }
     }
 
@@ -146,7 +149,7 @@ class Booking
             {
                 if (booking.Value.Status == BookingStatus.CheckedIn) // check booking start DATETIME
                 {
-                    System.Console.WriteLine($"[{++i}] {booking.Value.Start} {booking.Value.End} Room {booking.Value.Room} - {booking.Value.Guest} {booking.Value.Status}");
+                    System.Console.WriteLine($"[{++i}] {booking.Value.Start} {booking.Value.End} Room {booking.Value.RoomNumber} - {booking.Value.Guest} {booking.Value.Status}");
                     listedEnds.Add(booking.Key);
                 }
             }
@@ -164,6 +167,9 @@ class Booking
             if (!BookingsByEnd.TryGetValue(listedEnds[i - 1], out b)) continue;
             b.Status = BookingStatus.CheckedOut;
             Booking.SaveToFile("files/bookings.csv");
+            // update room status enum to occupied
+            Room.RoomList[b.RoomNumber].Status = RoomStatus.Vacant;
+            Room.SaveToFile("files/rooms.csv");
             System.Console.WriteLine("The guest has been checked out and the booking status updated.\nPress enter to continue");
             System.Console.ReadLine();
             break;
@@ -177,7 +183,7 @@ class Booking
         System.Console.WriteLine("Booking List ("+BookingsByStart.Count()+")");
         foreach (var booking in BookingsByStart)
         {
-            System.Console.WriteLine($"Room {booking.Value.Room} ({booking.Value.Start} - {booking.Value.End}) - {booking.Value.Guest} - {booking.Value.Status}");
+            System.Console.WriteLine($"Room {booking.Value.RoomNumber} ({Room.RoomList[booking.Value.RoomNumber].Status}) ({booking.Value.Start} - {booking.Value.End}) - {booking.Value.Guest} - {booking.Value.Status}");
         }
         System.Console.WriteLine("Press enter to continue");
         Console.ReadLine();

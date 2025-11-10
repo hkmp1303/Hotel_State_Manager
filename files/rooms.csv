@@ -1,13 +1,13 @@
 101¤Occupied
 102¤Reserved
-103¤Reserved
+103¤Occupied
 104¤Reserved
-105¤Vacant
+105¤Reserved
 106¤Vacant
 107¤Vacant
 108¤Vacant
-109¤Occupied
-201¤Reserved
+109¤Vacant
+201¤Vacant
 202¤Vacant
 203¤Vacant
 204¤Vacant
@@ -16,5 +16,5 @@
 207¤Vacant
 208¤Vacant
 209¤Vacant
-301¤Occupied
-213¤Unavailible
+213¤Reserved
+301¤Unavailable

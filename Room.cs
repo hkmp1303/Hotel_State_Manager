@@ -57,15 +57,17 @@ class Room
     }
 
     // Pick room from list
-    public static Room PickRoom(RoomStatus? filter = null)
+    public static Room? PickRoom(RoomStatus? filter = null)
     {
         while (true)
         {
             ListRooms(filter);
             Room? room;
             int roomNumber = 0;
-            System.Console.WriteLine("Pick a room number from the list");
-            if (!int.TryParse(Console.ReadLine() ?? "", out roomNumber))
+            System.Console.WriteLine("Pick a room number from the list\n[cancel] discard changes");
+            string selection = Console.ReadLine()?? "";
+            if (selection == "cancel") return null;
+            if (!int.TryParse(selection, out roomNumber))
             {
                 System.Console.WriteLine("Could not find room number, try again. Press enter to continue");
                 Console.ReadLine();
@@ -98,7 +100,7 @@ class Room
 }
 enum RoomStatus
 {
-    Unavailible,
+    Unavailable,
     Reserved,
     Occupied,
     Vacant

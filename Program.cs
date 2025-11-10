@@ -60,7 +60,8 @@ while (running)
                 Console.ReadLine();
                 break;
             case 3: // change room status
-                Room room = Room.PickRoom();
+                Room? room = Room.PickRoom();
+                if (room == null) break;
                 RoomStatus? newStatus = Room.PickStatus();
                 room.Status = newStatus ?? room.Status; // revert to previous room status if it is not set
                 Room.SaveToFile(roomSaveFile);
@@ -90,7 +91,8 @@ while (running)
             case 5: // create booking
                 Guest? guest = Guest.PickGuest();
                 if (guest == null) break;
-                Room bookRoom = Room.PickRoom(RoomStatus.Vacant);
+                Room? bookRoom = Room.PickRoom(RoomStatus.Vacant);
+                if (bookRoom == null) break;
                 Booking.Create(guest, bookRoom, receptionist);
                 Booking.SaveToFile(bookingSaveFile);
                 Room.SaveToFile(roomSaveFile);
