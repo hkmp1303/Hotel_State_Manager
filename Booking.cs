@@ -75,10 +75,10 @@ class Booking
     public static Booking Create(Guest guest, Room room, Receptionist receptionist)
     {
         DateTime start, end;
-        System.Console.WriteLine("Select booking start (YYYY-MM-DD HH:mm): ");
+        System.Console.WriteLine("Select booking start (YYYY-MM-DD HH:mm): "); // entering start DATETIME
         while (true)
             if (DateTime.TryParse(Console.ReadLine() ?? "", out start)) break;
-        System.Console.WriteLine("Select booking end (YYYY-MM-DD HH:mm): ");
+        System.Console.WriteLine("Select booking end (YYYY-MM-DD HH:mm): "); // entering end DATETIME
         while (true)
             if (DateTime.TryParse(Console.ReadLine() ?? "", out end)) break;
         Booking booking = new Booking(start, end, guest.ToString(), room.RoomNumber, receptionist.Username);
@@ -97,7 +97,7 @@ class Booking
             List<long> listedStarts = new();
             foreach (var booking in BookingsByStart)
             {
-                if (booking.Value.Start < DateTime.UtcNow && booking.Value.Status == BookingStatus.Booked) // has the booking started?
+                if (booking.Value.Start < DateTime.UtcNow && booking.Value.Status == BookingStatus.Booked) // check booking start DATETIME
                 {
                     System.Console.WriteLine($"[{++i}] {booking.Value.Start} Room {booking.Value.Room} - {booking.Value.Guest}");
                     listedStarts.Add(booking.Key);
@@ -128,7 +128,7 @@ class Booking
     public static void ListBookings()
     {
         Console.Clear();
-        System.Console.WriteLine("Booking List\n"+BookingsByStart.Count());
+        System.Console.WriteLine("Booking List ("+BookingsByStart.Count()+")");
         foreach (var booking in BookingsByStart)
         {
             System.Console.WriteLine($"Room {booking.Value.Room} ({booking.Value.Start} - {booking.Value.End})");

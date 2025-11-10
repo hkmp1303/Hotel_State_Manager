@@ -53,7 +53,6 @@ class Guest
         {
             Console.Clear();
             System.Console.WriteLine("Select a guest from the list or select [0] to create a new guest\n\n[cancel] discontinue selection");
-            System.Console.ReadLine();
             int i = 1;
             foreach (var guest in Guests)
             {
