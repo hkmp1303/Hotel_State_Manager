@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using App;
 
 // Load data from files
@@ -65,7 +66,26 @@ while (running)
                 Room.SaveToFile(roomSaveFile);
                 break;
             case 4: // check in/out guest
-                Booking.PickBookingForCheckin();
+                while (true)
+                {
+                    Console.Clear();
+                    System.Console.WriteLine("Check In/Out Menu\n\n[cancel] discard changes\n[1] Check in a guest\n[2] Check out a guest");
+                    string selection = Console.ReadLine() ?? "";
+                    switch (selection)
+                    {
+                        case "1":
+                            Booking.PickBookingForCheckin();
+                            break;
+                        case "2":
+                            Booking.CheckOut();
+                            break;
+                        case "cancel":
+                            break;
+                        default:
+                            continue;
+                    }
+                    break;
+                }
                 break;
             case 5: // create booking
                 Guest? guest = Guest.PickGuest();

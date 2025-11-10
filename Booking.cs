@@ -93,7 +93,7 @@ class Booking
         long endLong = ((DateTimeOffset)booking.Start).ToUnixTimeSeconds();
         BookingsByStart.Add($"{startLong}-{room}", booking);
         BookingsByEnd.Add($"{endLong}-{room}", booking);
-        System.Console.WriteLine("The guest's booking has been created. It can be viewed in: List bookings \nPress enter to continue");
+        System.Console.WriteLine("\nThe guest's booking has been created. It can be viewed in: List bookings \nPress enter to continue");
         Console.ReadLine();
         return booking;
     }
@@ -134,6 +134,42 @@ class Booking
         }
     }
 
+    public static void CheckOut()
+    {
+        while (true)
+        {
+            Console.Clear();
+            System.Console.WriteLine("Pick a booking from the list, or write [cancel] to go back to menu.");
+            int i = 0;
+            List<string> listedEnds = new();
+            foreach (var booking in BookingsByEnd)
+            {
+                if (booking.Value.Status == BookingStatus.CheckedIn) // check booking start DATETIME
+                {
+                    System.Console.WriteLine($"[{++i}] {booking.Value.Start} {booking.Value.End} Room {booking.Value.Room} - {booking.Value.Guest} {booking.Value.Status}");
+                    listedEnds.Add(booking.Key);
+                }
+            }
+            if (listedEnds.Count == 0)
+            {
+                System.Console.WriteLine("No bookings have ended yet. Press enter to go back to the previous menu.");
+                Console.ReadLine();
+                break;
+            }
+            Booking? b;
+            string selection = Console.ReadLine() ?? "";
+            if (selection.Trim() == "") continue;
+            if (selection == "cancel") break;
+            if (!int.TryParse(selection, out i)) continue;
+            if (!BookingsByEnd.TryGetValue(listedEnds[i - 1], out b)) continue;
+            b.Status = BookingStatus.CheckedOut;
+            Booking.SaveToFile("files/bookings.csv");
+            System.Console.WriteLine("The guest has been checked out and the booking status updated.\nPress enter to continue");
+            System.Console.ReadLine();
+            break;
+        }
+    }
+
     // list bookings
     public static void ListBookings()
     {
@@ -141,7 +177,7 @@ class Booking
         System.Console.WriteLine("Booking List ("+BookingsByStart.Count()+")");
         foreach (var booking in BookingsByStart)
         {
-            System.Console.WriteLine($"Room {booking.Value.Room} ({booking.Value.Start} - {booking.Value.End})");
+            System.Console.WriteLine($"Room {booking.Value.Room} ({booking.Value.Start} - {booking.Value.End}) - {booking.Value.Guest} - {booking.Value.Status}");
         }
         System.Console.WriteLine("Press enter to continue");
         Console.ReadLine();
