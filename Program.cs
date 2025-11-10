@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using App;
 
 // Load data from files
@@ -74,6 +73,7 @@ while (running)
                 Room bookRoom = Room.PickRoom(RoomStatus.Vacant);
                 Booking.Create(guest, bookRoom, receptionist);
                 Booking.SaveToFile(bookingSaveFile);
+                Room.SaveToFile(roomSaveFile);
                 break;
             case 6: // list bookings
                 Booking.ListBookings();
