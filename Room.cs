@@ -1,3 +1,5 @@
+using System.Runtime.Intrinsics.Arm;
+
 namespace App;
 
 class Room
@@ -40,6 +42,42 @@ class Room
             lines[i++] = $"{room.Key}¤{room.Value.Status}"; // prepare data for saving, separate by ¤
         }
         File.WriteAllLines(filename, lines); // write data to save file
+    }
+
+    // List rooms with optional filter
+    public static void ListRooms(RoomStatus? filter = null)
+    {
+        Console.Clear();
+        foreach (var room in RoomList)
+        {
+            if (filter == null || filter == room.Value.Status)
+                System.Console.WriteLine(room.Key);
+        }
+    }
+
+    // Pick room from list
+    public static Room PickRoom()
+    {
+        while (true)
+        {
+            ListRooms(null);
+            Room? room;
+            int roomNumber = 0;
+            System.Console.WriteLine("Pick a room number from the list");
+            if (!int.TryParse(Console.ReadLine() ?? "", out roomNumber))
+            {
+                System.Console.WriteLine("Could not find room number, try again. Press enter to continue");
+                Console.ReadLine();
+                continue;
+            }
+            if (RoomList.TryGetValue(roomNumber, out room))
+                return room;
+        }
+    }
+
+    public static RoomStatus PickStatus()
+    {
+        return RoomStatus.Occupied;
     }
 }
 enum RoomStatus
