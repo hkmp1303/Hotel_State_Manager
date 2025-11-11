@@ -16,7 +16,7 @@ bool running = true;
 while (running)
 {
     Console.Clear();
-    System.Console.WriteLine("Welcome to the Hotel California");
+    System.Console.WriteLine("Welcome to the Hotel California\n");
     System.Console.Write("Please login\nUsername: ");
     Receptionist? receptionist;
     if (!Receptionist.ReceptionistList.TryGetValue(Console.ReadLine() ?? "", out receptionist))
@@ -35,12 +35,12 @@ while (running)
     while (true)
     {
         Console.Clear();
-        System.Console.WriteLine($"Welcome{receptionist.Username}\nMain Menu\n" +
+        System.Console.WriteLine($"Welcome {receptionist.Username}\nMain Menu\n" +
             "[1] Occupied rooms\n" +
-            "[2] Vacant rooms list\n" +
+            "[2] Vacant rooms\n" +
             "[3] Change room status\n" +
             "[4] Check out or in a guest\n" +
-            "[5] Create booking\n" +
+            "[5] Create or cancel a booking\n" +
             "[6] List bookings\n" +
             "[9] Exit program"
         );
@@ -88,14 +88,34 @@ while (running)
                     break;
                 }
                 break;
-            case 5: // create booking
-                Guest? guest = Guest.PickGuest();
-                if (guest == null) break;
-                Room? bookRoom = Room.PickRoom(RoomStatus.Vacant);
-                if (bookRoom == null) break;
-                Booking.Create(guest, bookRoom, receptionist);
-                Booking.SaveToFile(bookingSaveFile);
-                Room.SaveToFile(roomSaveFile);
+            case 5: // create or cancel booking
+                while (true)
+                {
+                    Console.Clear();
+                    System.Console.WriteLine("Bookings Menu\n\n[cancel] discard changes\n[1] Create booking\n[2] Cancel booking");
+                    string selection = Console.ReadLine() ?? "";
+                    switch (selection)
+                    {
+                        case "1": // Create booking
+                            Guest? guest = Guest.PickGuest();
+                            if (guest == null) break; // user canceled or no guests
+                            Room? bookRoom = Room.PickRoom(RoomStatus.Vacant);
+                            if (bookRoom == null) break;
+                            Booking.Create(guest, bookRoom, receptionist);
+                            Booking.SaveToFile(bookingSaveFile);
+                            Room.SaveToFile(roomSaveFile);
+                            break;
+                        case "2": // Cancel booking
+                            // if (guest == null) break;
+                            Booking? bookingToCancel = Booking.PickBooking(BookingStatus.Booked);
+                            if (bookingToCancel == null) break; // user canceled or no bookings
+                            bookingToCancel.Cancel();
+                            break;
+                        default:
+                            continue;
+                    }
+                    break;
+                }
                 break;
             case 6: // list bookings
                 Booking.ListBookings();

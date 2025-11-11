@@ -180,13 +180,51 @@ class Booking
     public static void ListBookings()
     {
         Console.Clear();
-        System.Console.WriteLine("Booking List ("+BookingsByStart.Count()+")");
+        System.Console.WriteLine("Booking List (" + BookingsByStart.Count() + ")");
         foreach (var booking in BookingsByStart)
         {
             System.Console.WriteLine($"Room {booking.Value.RoomNumber} ({Room.RoomList[booking.Value.RoomNumber].Status}) ({booking.Value.Start} - {booking.Value.End}) - {booking.Value.Guest} - {booking.Value.Status}");
         }
         System.Console.WriteLine("Press enter to continue");
         Console.ReadLine();
+    }
+    public void Cancel()
+    {
+        Status = BookingStatus.Canceled;
+        Room.RoomList[RoomNumber].Status = RoomStatus.Vacant;
+        Room.SaveToFile("files/rooms.csv");
+        Booking.SaveToFile("files/bookings.csv");
+        System.Console.WriteLine("The booking has been canceled. Press enter to continue.");
+        Console.ReadLine();
+    }
+
+    public static Booking? PickBooking(BookingStatus? filter = null)
+    {
+        while (true)
+        {
+            List<Booking> listedBookings = new();
+            int i = 1;
+            foreach (var booking in BookingsByEnd)
+            {
+                if (filter == null || booking.Value.Status == filter)
+                {
+                    System.Console.WriteLine($"[{i++}] Room {booking.Value.RoomNumber} {booking.Value.Guest}");
+                    listedBookings.Add(booking.Value); // populating new list with filtered bookings
+                }
+            }
+            if (listedBookings.Count() == 0) // check for empty list
+            {
+                System.Console.WriteLine("There are no bookings to select from. Press enter to continue. ");
+                Console.ReadLine();
+                return null; // exit method
+            }
+            System.Console.WriteLine("Select a booking from the list or type [cancel] to return to the previous menu.");
+            string selectedBooking = Console.ReadLine() ?? "";
+            if (selectedBooking == "cancel") return null;
+            if (!int.TryParse(selectedBooking, out i)) continue;
+            if (i > 0 && i <= listedBookings.Count()) return listedBookings[i - 1]; // return
+        }
+
     }
 
 }
