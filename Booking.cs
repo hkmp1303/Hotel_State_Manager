@@ -183,6 +183,7 @@ class Booking
         System.Console.WriteLine("Booking List (" + BookingsByStart.Count() + ")");
         foreach (var booking in BookingsByStart)
         {
+            if (booking.Value.End < DateTime.Now && booking.Value.Status != BookingStatus.CheckedOut) continue; // hide expired bookings
             System.Console.WriteLine($"Room {booking.Value.RoomNumber} ({Room.RoomList[booking.Value.RoomNumber].Status}) ({booking.Value.Start} - {booking.Value.End}) - {booking.Value.Guest} - {booking.Value.Status}");
         }
         System.Console.WriteLine("Press enter to continue");
